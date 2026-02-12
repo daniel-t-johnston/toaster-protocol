@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Cipher/Cipher.vcxproj" Id="67d1a165-4328-4585-9ee5-9957bed1387c" />
+  <Project Path="SpellCheck/SpellCheck.vcxproj" Id="35eb71d1-14ac-46b9-8fe5-c264b70adaec" />
+</Solution>
