@@ -9,3 +9,16 @@
 **      Author: Afshin Bahrampour, Andre Gonzalez, Daniel Johnston, Nevada Marquis
 **        Date: 14 Feb 26
 ** -------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <string>
+#include "Cipher.h"
+
+
+int main()
+{
+	std::cout << test() << std::endl;
+
+	return 0;
+
+}
