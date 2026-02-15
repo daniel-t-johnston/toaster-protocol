@@ -1,0 +1,24 @@
+/* ---------------------------------------------------------------------------
+** I attest that this following code represents my own work and is subject to
+** the plagiarism policy found in the course syllabus.
+**
+**       Class: CSC 242
+**  Assignment: Lesson 5 / Part 1 / Cipher
+**        File: source.cpp
+** Description: Program that encrypts/decrypts a file using a keyword. 
+**      Author: Afshin Bahrampour, Andre Gonzalez, Daniel Johnston, Nevada Marquis
+**        Date: 14 Feb 26
+** -------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <string>
+#include "Cipher.h"
+
+
+int main()
+{
+	std::cout << test() << std::endl;
+
+	return 0;
+
+}
