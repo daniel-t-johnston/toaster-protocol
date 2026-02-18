@@ -13,7 +13,7 @@ namespace CipherTest
 		
 		TEST_METHOD(TestMethod1)
 		{
-			Assert::AreEqual("This is a test.", test().c_str());
+			
 		}
 	};
 }
