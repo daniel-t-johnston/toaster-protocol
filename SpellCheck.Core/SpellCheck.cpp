@@ -10,7 +10,7 @@ void create_dict(std::vector<std::string>& dict, std::string dict_file)
 	std::ifstream input(dict_file); //Opens the file
 	if (!input) //Checks if the file was opened successfully
     {
-		throw std::runtime_error("Failed to open dictionary: " + dict_file);
+		throw std::runtime_error("Failed to open dictionary: ");
 	}
 
 	std::string word; //Variable to hold each word read from the file
