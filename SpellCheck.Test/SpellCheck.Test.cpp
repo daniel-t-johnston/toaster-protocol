@@ -10,7 +10,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace SpellCheckTest
 {
-	TEST_CLASS(SpellCheckTest)
+	TEST_CLASS(SpellCheckTest_Dict)
 	{
 	public:
 		std::string get_test_dict_path()

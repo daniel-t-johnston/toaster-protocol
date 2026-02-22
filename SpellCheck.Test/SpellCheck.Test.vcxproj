@@ -173,7 +173,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\SpellCheck\test_dict.txt" />
+    <CopyFileToFolders Include="..\SpellCheck\test_dict.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

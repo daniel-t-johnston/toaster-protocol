@@ -28,8 +28,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\SpellCheck\test_dict.txt">
+    <CopyFileToFolders Include="..\SpellCheck\test_dict.txt">
       <Filter>Resource Files</Filter>
-    </Text>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

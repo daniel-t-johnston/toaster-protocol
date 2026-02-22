@@ -23,8 +23,5 @@
     <Text Include="words.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="test_dict.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
   </ItemGroup>
 </Project>
