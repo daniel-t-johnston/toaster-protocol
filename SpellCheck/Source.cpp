@@ -42,7 +42,10 @@ int main(int argc, char* argv[])
     }
 
 	std::vector<std::string> dict = {}; //Initialize empty dictionary vector
+	std::vector<std::string> source = {}; //Initialize empty dictionary vector
 	
 	create_dict(dict, dict_file); //Passes a reference of the empty vector to the create_dict function, which fills it with words from the file words.txt
+
+	load_source(source, input_file); //Passes a reference of the empty vector to the load_source function, which fills it with words from the input file
 
 }
