@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <cctype>
 
 void create_dict(std::vector<std::string>& dict, std::string dict_file)
 {
@@ -54,16 +55,17 @@ std::string clean_word(const std::string& word) //removes non-alphabetic charact
 	return cleaned;
 }
 
-void find_misspelled(std::vector<std::string>& source, std::vector<std::string>& dict,
+void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,
 	std::vector<misspelled_word>& misspelled)
 {
-	for (const std::string& source_word : source) //Loops through each word in source 
+	for (size_t i = 0; i < source.size(); ++i) //Loops through each word in source
 	{
+		const std::string& source_word = source[i];
 		if (!std::binary_search(dict.begin(), dict.end(), source_word))
 		{
 			if (source_word != "" && source_word != "\n" && source_word != " ")
 			{
-				misspelled.push_back((misspelled_word(source_word, &source_word - &source[0] + 1)));
+				misspelled.push_back(misspelled_word(source_word, static_cast<int>(i + 1)));
 			}
 		}
 	}
@@ -108,4 +110,3 @@ void output_misspelled(std::vector<misspelled_word>& misspelled)
 		std::cout << wc.first << ": " << wc.second << std::endl;
 	}
 }
-
