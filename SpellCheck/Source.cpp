@@ -12,7 +12,7 @@
 
 #include <iostream>
 #include <string>
-#include "SpellCheck.h"
+#include "../SpellCheck.Core/SpellCheck.h"
 #include <vector>
 
 int main(int argc, char* argv[])
