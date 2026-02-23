@@ -41,11 +41,17 @@ int main(int argc, char* argv[])
         dict_file = "words.txt"; //Default dictionary file name if not provided
     }
 
-	std::vector<std::string> dict = {}; //Initialize empty dictionary vector
-	std::vector<std::string> source = {}; //Initialize empty dictionary vector
-	
+	std::vector<std::string> dict; //Initialize empty dictionary vector
+	std::vector<std::string> source; //Initialize empty source vector
+	std::vector<misspelled_word> misspelled; //Initialize empty misspelled vector
+
 	create_dict(dict, dict_file); //Passes a reference of the empty vector to the create_dict function, which fills it with words from the file words.txt
 
 	load_source(source, input_file); //Passes a reference of the empty vector to the load_source function, which fills it with words from the input file
 
+	find_misspelled(source, dict, misspelled); //Finds words in source missing from dict and adds them to misspelled
+
+	output_misspelled(misspelled);
+
+	return 0; //Returns 0 to indicate successful execution of the program
 }
