@@ -12,7 +12,7 @@
 
 #include <iostream>
 #include <string>
-#include "Cipher.h"
+#include "../Cipher.Core/Cipher.h"
 
 int main(int argc, char* argv[])
 {
