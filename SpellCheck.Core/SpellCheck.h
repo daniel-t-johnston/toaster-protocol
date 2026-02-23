@@ -54,7 +54,7 @@ std::string clean_word(const std::string& word);
  * @param dict  Dictionary file written to a vector of strings passed by reference.
  * @param misspelled Empty vector passed by reference to be filled with the misspelled words.
  */
-void find_misspelled(std::vector<std::string>& source, std::vector<std::string>& dict, std::vector<misspelled_word>& misspelled);
+void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict, std::vector<misspelled_word>& misspelled);
 
 /**
  * Outputs the misspelled words and their position to output.txt. Prints count to terminal window.
