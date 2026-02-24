@@ -10,6 +10,7 @@
 **        Date: 14 Feb 26
 ** -------------------------------------------------------------------------*/
 
+#include "../Cipher.Core/pch.h"
 #include <iostream>
 #include <string>
 #include "../Cipher.Core/Cipher.h"
