@@ -77,3 +77,29 @@ Usage: SpellCheck.exe <input_file> [dictionary_file]
 - `SpellCheck.Core/SpellCheck.cpp`: Dictionary loading, input cleaning, misspelling detection, and output formatting.
 - `SpellCheck.Core/SpellCheck.h`: Public API and `misspelled_word` struct.
 - `SpellCheck.Test/SpellCheck.Test.cpp`: Unit tests for SpellCheck core behavior.
+## Running in GitHub Codespaces
+
+This repository now includes a `.devcontainer/devcontainer.json` so Codespaces starts with a ready-to-build C++ toolchain.
+
+### Quick start
+1. In GitHub, click **Code** → **Codespaces** → **Create codespace on main** (or your branch).
+2. Wait for the container to finish setup. The `postCreateCommand` runs `cmake -S . -B build -G Ninja` automatically.
+3. Build everything:
+
+```bash
+cmake --build build
+```
+
+### Run SpellCheck
+From the repo root:
+
+```bash
+./build/SpellCheck SpellCheck/input.txt SpellCheck/words.txt
+```
+
+### Run Cipher
+The Cipher executable currently builds in Codespaces, but its command-line behavior is still TODO in `Cipher/Source.cpp`.
+
+```bash
+./build/Cipher
+```
