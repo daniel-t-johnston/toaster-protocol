@@ -23,7 +23,6 @@ int main(int argc, char* argv[])
 	 *First arg is the input file name,
 	 *Second arg is the dictionary file name (optional, defaults to words.txt if not provided).
 	 *If more than 3 or less than 2 arguments are provided, it prints a usage message and exits with an error code.
-	 *
 	 */
 	
 	if (argc < 2 || argc > 3) //Checks if the number of command line arguments is valid (at least 2 and at most 3)
