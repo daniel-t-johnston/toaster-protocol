@@ -45,7 +45,8 @@ int main(int argc, char* argv[])
 	std::vector<std::string> dict; //Initialize empty dictionary vector
 	std::vector<std::string> source; //Initialize empty source vector
 	std::vector<misspelled_word> misspelled; //Initialize empty misspelled vector
-
+	try
+	{ 
 	create_dict(dict, dict_file); //Passes a reference of the empty vector to the create_dict function, which fills it with words from the file words.txt
 
 	load_source(source, input_file); //Passes a reference of the empty vector to the load_source function, which fills it with words from the input file
@@ -53,6 +54,11 @@ int main(int argc, char* argv[])
 	find_misspelled(source, dict, misspelled); //Finds words in source missing from dict and adds them to misspelled
 
 	output_misspelled(misspelled);
-
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Error: " << e.what() << std::endl;
+		return 1;
+	}
 	return 0; //Returns 0 to indicate successful execution of the program
 }
