@@ -1,3 +1,4 @@
+#include "pch.h"
 #include <iostream>
 #include <string>
 #include "SpellCheck.h"
