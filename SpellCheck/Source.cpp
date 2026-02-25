@@ -10,7 +10,6 @@
 **        Date: 14 Feb 26
 ** -------------------------------------------------------------------------*/
 
-#include "../SpellCheck.Core/pch.h"
 #include <iostream>
 #include <string>
 #include "../SpellCheck.Core/SpellCheck.h"

@@ -1,4 +1,5 @@
-#include "pch.h"
+#include <iostream>
+#include <string>
 #include "Cipher.h"
 
 void generate_key(std::string keyword, char key[52][2])
