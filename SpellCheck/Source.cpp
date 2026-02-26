@@ -17,6 +17,54 @@
 #include <string>
 #include <vector>
 
+// Function prototypes
+struct misspelled_word;
+void create_dict(std::vector<std::string>& dict, std::string dict_file);
+std::string clean_word(const std::string& word);
+void load_source(std::vector<std::string>& source, std::string input_file);
+void output_misspelled(std::vector<misspelled_word>& misspelled);
+void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,
+	std::vector<misspelled_word>& misspelled);
+
+
+int main(int argc, char* argv[])
+{
+	if (argc < 2 || argc > 3)
+	{
+		std::cerr << "Usage: " << argv[0]
+			<< " <input_file> [dictionary_file]\n";
+		return 1;
+	}
+	std::string input_file = argv[1];
+	std::string dict_file;
+	if (argc == 3)
+	{
+		dict_file = argv[2];
+	}
+	else
+	{
+		dict_file = "words.txt";
+	}
+
+	std::vector<std::string> dict;
+	std::vector<std::string> source;
+	std::vector<misspelled_word> misspelled;
+	try
+	{
+		create_dict(dict, dict_file);
+		load_source(source, input_file);
+		find_misspelled(source, dict, misspelled);
+		output_misspelled(misspelled);
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Error: " << e.what() << std::endl;
+		return 1;
+	}
+	return 0;
+}
+
+
 /**
  * Struct to hold a misspelled word and its position in the source text.
  */
@@ -28,6 +76,11 @@ struct misspelled_word
 	misspelled_word(std::string w, int n) : word(w), word_number(n) {}
 };
 
+/**
+ * 
+ * @param dict 
+ * @param dict_file 
+ */
 void create_dict(std::vector<std::string>& dict, std::string dict_file)
 {
 	std::ifstream input(dict_file);
@@ -48,6 +101,11 @@ void create_dict(std::vector<std::string>& dict, std::string dict_file)
 	dict.erase(std::unique(dict.begin(), dict.end()), dict.end());
 }
 
+/**
+ * 
+ * @param word 
+ * @return 
+ */
 std::string clean_word(const std::string& word)
 {
 	std::string cleaned;
@@ -62,6 +120,11 @@ std::string clean_word(const std::string& word)
 	return cleaned;
 }
 
+/**
+ * 
+ * @param source 
+ * @param input_file 
+ */
 void load_source(std::vector<std::string>& source, std::string input_file)
 {
 	std::ifstream input(input_file);
@@ -77,6 +140,12 @@ void load_source(std::vector<std::string>& source, std::string input_file)
 	}
 }
 
+/**
+ * 
+ * @param source 
+ * @param dict 
+ * @param misspelled 
+ */
 void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,
 	std::vector<misspelled_word>& misspelled)
 {
@@ -93,6 +162,10 @@ void find_misspelled(const std::vector<std::string>& source, const std::vector<s
 	}
 }
 
+/**
+ * 
+ * @param misspelled 
+ */
 void output_misspelled(std::vector<misspelled_word>& misspelled)
 {
 	std::ofstream outfile("output.txt");
@@ -131,41 +204,4 @@ void output_misspelled(std::vector<misspelled_word>& misspelled)
 	{
 		std::cout << wc.first << ": " << wc.second << std::endl;
 	}
-}
-
-int main(int argc, char* argv[])
-{
-	if (argc < 2 || argc > 3)
-	{
-		std::cerr << "Usage: " << argv[0]
-			<< " <input_file> [dictionary_file]\n";
-		return 1;
-	}
-	std::string input_file = argv[1];
-	std::string dict_file;
-	if (argc == 3)
-	{
-		dict_file = argv[2];
-	}
-	else
-	{
-		dict_file = "words.txt";
-	}
-
-	std::vector<std::string> dict;
-	std::vector<std::string> source;
-	std::vector<misspelled_word> misspelled;
-	try
-	{
-		create_dict(dict, dict_file);
-		load_source(source, input_file);
-		find_misspelled(source, dict, misspelled);
-		output_misspelled(misspelled);
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << "Error: " << e.what() << std::endl;
-		return 1;
-	}
-	return 0;
 }
