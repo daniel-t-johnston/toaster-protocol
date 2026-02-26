@@ -4,9 +4,7 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="Cipher.Core/Cipher.Core.vcxproj" Id="2330bcbe-dd0b-4900-b709-199f2b29c562" />
-  <Project Path="Cipher.Test/Cipher.Test.vcxproj" />
   <Project Path="Cipher/Cipher.vcxproj" Id="67d1a165-4328-4585-9ee5-9957bed1387c" />
   <Project Path="SpellCheck.Core/SpellCheck.Core.vcxproj" Id="177ad660-18aa-4904-812f-b7692f7f13e3" />
-  <Project Path="SpellCheck.Test/SpellCheck.Test.vcxproj" />
   <Project Path="SpellCheck/SpellCheck.vcxproj" Id="35eb71d1-14ac-46b9-8fe5-c264b70adaec" />
 </Solution>
