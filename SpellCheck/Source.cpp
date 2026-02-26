@@ -14,6 +14,7 @@
 #include <cctype>
 #include <fstream>
 #include <iostream>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -101,15 +102,13 @@ void create_dict(std::vector<std::string>& dict, const std::string& dict_file)
 	std::ifstream input(dict_file);
 	if (!input)
 	{
-		throw std::runtime_error("Failed to open dictionary: ");
+		throw std::runtime_error("Failed to open dictionary: " + dict_file);
 	}
 
 	std::string word;
 	while (input >> word)
 	{
-		std::transform(word.begin(), word.end(), word.begin(),
-		               [](unsigned char c) { return std::tolower(c); });
-
+		clean_word(word);
 		dict.push_back(word);
 	}
 	std::sort(dict.begin(), dict.end());
@@ -173,7 +172,7 @@ void find_misspelled(const std::vector<std::string>& source, const std::vector<s
 		const std::string& source_word = source[i];
 		if (!std::binary_search(dict.begin(), dict.end(), source_word))
 		{
-			if (source_word != "" && source_word != "\n" && source_word != " ")
+			if (!source_word.empty())
 			{
 				misspelled.push_back(misspelled_word(source_word, static_cast<int>(i + 1)));
 			}
@@ -188,44 +187,15 @@ void find_misspelled(const std::vector<std::string>& source, const std::vector<s
  */
 void output_misspelled(const std::vector<misspelled_word>& misspelled)
 {
-	std::ofstream outfile("output.txt");
+	std::set<std::string> words_only;
 	for (const misspelled_word& mw : misspelled)
 	{
-		outfile << "Misspelled word: " << mw.word << " at position " << mw.word_number << '\n';
-	}
-	outfile.close();
-	std::cout << "Total misspelled words: " << misspelled.size() << '\n';
-
-	std::vector<std::string> words_only;
-	for (const misspelled_word& mw : misspelled)
-	{
-		words_only.push_back(mw.word);
-	}
-	std::sort(words_only.begin(), words_only.end());
-	std::vector<std::pair<std::string, int>> word_count;
-	if (!words_only.empty())
-	{
-		std::string current = words_only[0];
-		int count = 1;
-		for (size_t i = 1; i < words_only.size(); i++)
-		{
-			if (words_only[i] == current)
-			{
-				count++;
-			}
-			else
-			{
-				word_count.push_back({current, count});
-				current = words_only[i];
-				count = 1;
-			}
-		}
-		word_count.push_back({current, count});
+		words_only.insert(mw.word);
 	}
 
-	std::cout << "Misspelled words and their counts:" << '\n';
-	for (const auto& wc : word_count)
+	std::cout << "Misspelled words:" << '\n';
+	for (const auto& wc : words_only)
 	{
-		std::cout << wc.first << ": " << wc.second << '\n';
+		std::cout << wc << '\n';
 	}
 }
