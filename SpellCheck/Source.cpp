@@ -18,13 +18,15 @@
 #include <vector>
 #include <stdexcept>
 
-// Function prototypes
+// Forward declaration
 struct misspelled_word;
-static void create_dict(std::vector<std::string>& dict, const std::string& dict_file);
-static std::string clean_word(const std::string& word);
-static void load_source(std::vector<std::string>& source, const std::string& input_file);
-static void output_misspelled(const std::vector<misspelled_word>& misspelled);
-static void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,
+
+// Function prototypes
+static void create_dict(std::vector<std::string>& dict, const std::string& dict_file);						//Author:
+static std::string clean_word(const std::string& word);														//Author:
+static void load_source(std::vector<std::string>& source, const std::string& input_file);					//Author:
+static void output_misspelled(const std::vector<misspelled_word>& misspelled);								//Author:
+static void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,	//Author:
                             std::vector<misspelled_word>& misspelled);
 
 
