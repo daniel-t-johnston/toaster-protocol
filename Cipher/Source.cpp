@@ -5,48 +5,70 @@
 **       Class: CSC 242
 **  Assignment: Lesson 5 / Part 1 / Cipher
 **        File: source.cpp
-** Description: Program that encrypts/decrypts a file using a keyword. 
+** Description: Program that encrypts/decrypts a file using a keyword.
 **      Author: Afshin Bahrampour, Andre Gonzalez, Daniel Johnston, Nevada Marquis
 **        Date: 14 Feb 26
 ** -------------------------------------------------------------------------*/
 
-#include "../Cipher.Core/pch.h"
 #include <iostream>
 #include <string>
-#include "../Cipher.Core/Cipher.h"
+
+void generate_key(std::string keyword, char key[52][2])
+{
+	//TODO: Generate key a-z, A-Z in COL 0, shifted text in COL 1
+}
+
+std::string get_input(std::string input_file)
+{
+	std::string input_string;
+
+	//TODO: Write input_file to input_string
+
+	return input_string;
+}
+
+std::string shift_text(std::string input_string, char key[52][2], char action)
+{
+	std::string output_string;
+
+	//TODO: Replace chars found in COL 0 with COL 1 to encrypt, reverse for decrypt
+
+	return output_string;
+}
+
+int save_output(std::string OUTPUT_FILE, std::string output_string)
+{
+	//TODO: Save output string to file
+
+	return 1;
+}
 
 int main(int argc, char* argv[])
 {
 	//TODO: Handle args (-d or -e, input file, output file, -k keyword)
 
-	const std::string INPUT_FILE = ""; //add input file name from args
-	const std::string OUTPUT_FILE = ""; //add output file name from args
-	const std::string KEYWORD = ""; //add keyword from args
-	const char ACTION = 'a'; //add d or e from args
+	const std::string INPUT_FILE = "";
+	const std::string OUTPUT_FILE = "";
+	const std::string KEYWORD = "";
+	const char ACTION = 'a';
 
-	//Initialize empty key array
-	const int KEY_ROWS = 52; //26 upper case, 26 lower case
-	const int KEY_COLS = 2; //alphabet and shifted alphabet
-	char key[KEY_ROWS][KEY_COLS] = {}; //52x2 empty array
+	const int KEY_ROWS = 52;
+	const int KEY_COLS = 2;
+	char key[KEY_ROWS][KEY_COLS] = {};
 
-	//The following code calls functions from Cipher.cpp in the Cipher.core static library. 
+	generate_key(KEYWORD, key);
+	std::string input_string = get_input(INPUT_FILE);
+	std::string output_string = shift_text(input_string, key, ACTION);
+	int complete = save_output(OUTPUT_FILE, output_string);
 
-	generate_key(KEYWORD, key); //Calls function in Cipher.cpp to generate key array
-
-	std::string input_string = get_input(INPUT_FILE); //Calls function in Cipher.cpp to write input file to string
-
-	std::string output_string = shift_text(input_string, key, ACTION); //Calls function in Cipher.cpp to shift string
-
-	int complete = save_output(OUTPUT_FILE, output_string); //Calls function in Cipher.cpp to write output string to file
-
-	if (complete == 1) //Print confirmation statement
+	if (complete == 1)
 	{
 		std::cout << "File " << INPUT_FILE << " was ";
-		if ( ACTION == 'd')
+		if (ACTION == 'd')
 		{
 			std::cout << "decrypted ";
 		}
-		else if ( ACTION == 'e')
+		else if (ACTION == 'e')
 		{
 			std::cout << "encrypted ";
 		}

@@ -10,55 +10,162 @@
 **        Date: 14 Feb 26
 ** -------------------------------------------------------------------------*/
 
-#include "../SpellCheck.Core/pch.h"
+#include <algorithm>
+#include <cctype>
+#include <fstream>
 #include <iostream>
 #include <string>
-#include "../SpellCheck.Core/SpellCheck.h"
 #include <vector>
+
+/**
+ * Struct to hold a misspelled word and its position in the source text.
+ */
+struct misspelled_word
+{
+	std::string word;
+	int word_number = 0;
+
+	misspelled_word(std::string w, int n) : word(w), word_number(n) {}
+};
+
+void create_dict(std::vector<std::string>& dict, std::string dict_file)
+{
+	std::ifstream input(dict_file);
+	if (!input)
+	{
+		throw std::runtime_error("Failed to open dictionary: ");
+	}
+
+	std::string word;
+	while (input >> word)
+	{
+		std::transform(word.begin(), word.end(), word.begin(),
+			[](unsigned char c) { return std::tolower(c); });
+
+		dict.push_back(word);
+	}
+	std::sort(dict.begin(), dict.end());
+	dict.erase(std::unique(dict.begin(), dict.end()), dict.end());
+}
+
+std::string clean_word(const std::string& word)
+{
+	std::string cleaned;
+
+	for (unsigned char c : word)
+	{
+		if (std::isalpha(c) || c == '\'')
+		{
+			cleaned += std::tolower(c);
+		}
+	}
+	return cleaned;
+}
+
+void load_source(std::vector<std::string>& source, std::string input_file)
+{
+	std::ifstream input(input_file);
+	if (!input)
+	{
+		throw std::runtime_error("Failed to open input file: ");
+	}
+	std::string word;
+	while (input >> word)
+	{
+		word = clean_word(word);
+		source.push_back(word);
+	}
+}
+
+void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,
+	std::vector<misspelled_word>& misspelled)
+{
+	for (size_t i = 0; i < source.size(); ++i)
+	{
+		const std::string& source_word = source[i];
+		if (!std::binary_search(dict.begin(), dict.end(), source_word))
+		{
+			if (source_word != "" && source_word != "\n" && source_word != " ")
+			{
+				misspelled.push_back(misspelled_word(source_word, static_cast<int>(i + 1)));
+			}
+		}
+	}
+}
+
+void output_misspelled(std::vector<misspelled_word>& misspelled)
+{
+	std::ofstream outfile("output.txt");
+	for (const misspelled_word& mw : misspelled)
+	{
+		outfile << "Misspelled word: " << mw.word << " at position " << mw.word_number << std::endl;
+	}
+	outfile.close();
+	std::cout << "Total misspelled words: " << misspelled.size() << std::endl;
+
+	std::vector<std::string> words_only;
+	for (const misspelled_word& mw : misspelled)
+	{
+		words_only.push_back(mw.word);
+	}
+	std::sort(words_only.begin(), words_only.end());
+	std::vector<std::pair<std::string, int>> word_count;
+	if (!words_only.empty()) {
+		std::string current = words_only[0];
+		int count = 1;
+		for (size_t i = 1; i < words_only.size(); i++) {
+			if (words_only[i] == current) {
+				count++;
+			}
+			else {
+				word_count.push_back({ current, count });
+				current = words_only[i];
+				count = 1;
+			}
+		}
+		word_count.push_back({ current, count });
+	}
+
+	std::cout << "Misspelled words and their counts:" << std::endl;
+	for (const auto& wc : word_count)
+	{
+		std::cout << wc.first << ": " << wc.second << std::endl;
+	}
+}
 
 int main(int argc, char* argv[])
 {
-	/*
-	 *This chunk of code handles the command line arguments before proceeding.
-	 *First arg is the input file name,
-	 *Second arg is the dictionary file name (optional, defaults to words.txt if not provided).
-	 *If more than 3 or less than 2 arguments are provided, it prints a usage message and exits with an error code.
-	 */
-	
-	if (argc < 2 || argc > 3) //Checks if the number of command line arguments is valid (at least 2 and at most 3)
-    {
-        std::cerr << "Usage: " << argv[0]
-            << " <input_file> [dictionary_file]\n";
-        return 1;
-    }
-	std::string input_file = argv[1]; //Gets the input file name from the command line arguments
-	std::string dict_file; //Variable to hold the dictionary file name
-	if (argc == 3) //Checks if a dictionary file name was provided as a command line argument
-    {
-		dict_file = argv[2]; //Gets the dictionary file name from the command line arguments if provided
-    }
-	else // If no dictionary file name was provided, it defaults to "words.txt"
-    {
-        dict_file = "words.txt"; //Default dictionary file name if not provided
-    }
+	if (argc < 2 || argc > 3)
+	{
+		std::cerr << "Usage: " << argv[0]
+			<< " <input_file> [dictionary_file]\n";
+		return 1;
+	}
+	std::string input_file = argv[1];
+	std::string dict_file;
+	if (argc == 3)
+	{
+		dict_file = argv[2];
+	}
+	else
+	{
+		dict_file = "words.txt";
+	}
 
-	std::vector<std::string> dict; //Initialize empty dictionary vector
-	std::vector<std::string> source; //Initialize empty source vector
-	std::vector<misspelled_word> misspelled; //Initialize empty misspelled vector
+	std::vector<std::string> dict;
+	std::vector<std::string> source;
+	std::vector<misspelled_word> misspelled;
 	try
-	{ 
-	create_dict(dict, dict_file); //Passes a reference of the empty vector to the create_dict function, which fills it with words from the file words.txt
-
-	load_source(source, input_file); //Passes a reference of the empty vector to the load_source function, which fills it with words from the input file
-
-	find_misspelled(source, dict, misspelled); //Finds words in source missing from dict and adds them to misspelled
-
-	output_misspelled(misspelled);
+	{
+		create_dict(dict, dict_file);
+		load_source(source, input_file);
+		find_misspelled(source, dict, misspelled);
+		output_misspelled(misspelled);
 	}
 	catch (const std::exception& e)
 	{
 		std::cerr << "Error: " << e.what() << std::endl;
 		return 1;
 	}
-	return 0; //Returns 0 to indicate successful execution of the program
+	return 0;
 }
