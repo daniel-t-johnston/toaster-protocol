@@ -14,9 +14,9 @@
 #include <cctype>
 #include <fstream>
 #include <iostream>
-#include <set>
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 // Function prototypes
 struct misspelled_word;
@@ -86,7 +86,7 @@ struct misspelled_word
 	std::string word;
 	int word_number = 0;
 
-	misspelled_word(std::string w, int n) : word(std::move(w)), word_number(n)
+	misspelled_word(const std::string& w, int n) : word(w), word_number(n)
 	{
 	}
 };
@@ -97,7 +97,7 @@ struct misspelled_word
  * @param dict Blank vector passed by reference to be filled with the words from the dictionary file
  * @param dict_file file name of the dictionary file to read from, which should contain one word per line. If the file cannot be opened, the function throws a runtime error.
  */
-void create_dict(std::vector<std::string>& dict, const std::string& dict_file)
+static void create_dict(std::vector<std::string>& dict, const std::string& dict_file)
 {
 	std::ifstream input(dict_file);
 	if (!input)
@@ -108,8 +108,9 @@ void create_dict(std::vector<std::string>& dict, const std::string& dict_file)
 	std::string word;
 	while (input >> word)
 	{
-		clean_word(word);
-		dict.push_back(word);
+		word = clean_word(word);
+		if (!word.empty())
+			dict.push_back(word);
 	}
 	std::sort(dict.begin(), dict.end());
 	dict.erase(std::unique(dict.begin(), dict.end()), dict.end());
@@ -122,7 +123,7 @@ void create_dict(std::vector<std::string>& dict, const std::string& dict_file)
  * @param word String to be cleaned
  * @return Cleaned string
  */
-std::string clean_word(const std::string& word)
+static std::string clean_word(const std::string& word)
 {
 	std::string cleaned;
 
@@ -142,18 +143,19 @@ std::string clean_word(const std::string& word)
  * @param source Blank vector passed by reference to be filled with the words from the input file.
  * @param input_file
  */
-void load_source(std::vector<std::string>& source, const std::string& input_file)
+static void load_source(std::vector<std::string>& source, const std::string& input_file)
 {
 	std::ifstream input(input_file);
 	if (!input)
 	{
-		throw std::runtime_error("Failed to open input file: ");
+		throw std::runtime_error("Failed to open input file: " + input_file);
 	}
 	std::string word;
 	while (input >> word)
 	{
 		word = clean_word(word);
-		source.push_back(word);
+		if (!word.empty())
+			source.push_back(word);
 	}
 }
 
@@ -164,7 +166,7 @@ void load_source(std::vector<std::string>& source, const std::string& input_file
  * @param dict  Dictionary file written to a vector of strings passed by reference.
  * @param misspelled Empty vector passed by reference to be filled with the misspelled words.
  */
-void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,
+static void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,
                      std::vector<misspelled_word>& misspelled)
 {
 	for (size_t i = 0; i < source.size(); ++i)
@@ -172,30 +174,22 @@ void find_misspelled(const std::vector<std::string>& source, const std::vector<s
 		const std::string& source_word = source[i];
 		if (!std::binary_search(dict.begin(), dict.end(), source_word))
 		{
-			if (!source_word.empty())
-			{
 				misspelled.push_back(misspelled_word(source_word, static_cast<int>(i + 1)));
-			}
 		}
 	}
 }
 
 /**
- * Outputs the misspelled words and their position to output.txt. Prints count to terminal window.
+ * Outputs the misspelled words.
  *
  * @param misspelled Vector of misspelled words passed by reference, which contains the misspelled words and position in the source text.
  */
-void output_misspelled(const std::vector<misspelled_word>& misspelled)
+static void output_misspelled(const std::vector<misspelled_word>& misspelled)
 {
-	std::set<std::string> words_only;
-	for (const misspelled_word& mw : misspelled)
-	{
-		words_only.insert(mw.word);
-	}
 
 	std::cout << "Misspelled words:" << '\n';
-	for (const auto& wc : words_only)
+	for (const auto& mw : misspelled)
 	{
-		std::cout << wc << '\n';
+		std::cout << "Word: " << mw.word << ", Position: " << mw.word_number << '\n';
 	}
 }
