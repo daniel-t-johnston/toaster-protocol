@@ -16,6 +16,7 @@
 #include <string>
 #include <fstream> 
 #include <sstream>
+#include <vector>
 
 // Constants for the substitution key table.
 static const int KEY_ROWS = 52;
@@ -28,15 +29,15 @@ static void parse_args(int argc, char* argv[],														// Authors: Daniel J
 	std::string& input_file,
 	std::string& output_file);
 static void print_usage(const char* program_name);													// Authors: Daniel Johnston
-static void generate_key(const std::string& keyword, char key[KEY_ROWS][KEY_COLS]);					// Authors: 
+static void generate_key(const std::string& keyword, char key[KEY_ROWS][KEY_COLS]);					// Authors: Daniel Johnston
 static std::string get_input(const std::string& input_file);										// Authors: Afshin Bahrampour
 void non_arguments(const std::string& single_word, const std::string& text_stream);					// Authors: Afshin Bahrampour
-static std::string shift_text(const std::string& input_string,										// Authors: 
+static std::string shift_text(const std::string& input_string,										// Authors: Andre Gonzalez
 	const char key[KEY_ROWS][KEY_COLS],
 	char action);
-static void save_output(const std::string& output_file, const std::string& output_string);			// Authors: 
+static void save_output(const std::string& output_file, const std::string& output_string);			// Authors: Andre Gonzalez
 
-int main(int argc, char* argv[])
+int main(int argc, char* argv[])																	// Authors: Daniel Johnston
 {
 	try
 	{
@@ -195,16 +196,45 @@ static void parse_args(int argc, char* argv[],
  */
 static void generate_key(const std::string& keyword, char key[KEY_ROWS][KEY_COLS])
 {
-	// TODO:
-	// 1) Build a cipher alphabet from keyword:
-	//    - Keep letters only
-	//    - Convert to lowercase
-	//    - Remove duplicates (keep first occurrence)
-	//    - Append remaining letters in reverse alphabet order (z..a) excluding used letters
-	// 2) Fill key table:
-	//    Rows 0-25:  key[row][0] = 'a'+row, key[row][1] = cipherLower[row]
-	//    Rows 26-51: key[row][0] = 'A'+(row-26), key[row][1] = toupper(cipherLower[row-26])
+	
+	std::string cipher;
+	std::vector<bool> used(26, false);		// Track which letters have been used in the cipher
 
+	for (char c : keyword) 
+	{
+		if (std::isalpha(c)) 
+		{
+			char lower = std::tolower(c);	// Convert to lowercase for indexing
+			int idx = lower - 'a';			// Get index (0-25) for 'a'-'z'
+			if (!used[idx])					// If this letter hasn't been used yet add to cipher
+			{
+				used[idx] = true;
+				cipher += lower;
+			}
+		}
+	}
+
+	for (char c = 'z'; c >= 'a'; --c)		// Loop through and add remain z-a
+	{
+		int idx = c - 'a';
+		if (!used[idx])
+		{
+			cipher += c;
+		}
+	}
+
+
+	for (int row = 0; row < 26; ++row)		//Fill lowercase rows 0-25
+	{
+		key[row][0] = 'a' + row;
+		key[row][1] = cipher[row];
+	}
+	// Rows 26-51: uppercase
+	for (int row = 26; row < 52; ++row)		//Fill uppercase rows 26-51
+	{
+		key[row][0] = 'A' + (row - 26);
+		key[row][1] = std::toupper(cipher[row - 26]);
+	}
 }
 
 /*
@@ -293,18 +323,34 @@ static std::string shift_text(const std::string& input_string,
 	const char key[KEY_ROWS][KEY_COLS],
 	char action)
 {
+	std::string output_string;
+	output_string.reserve(input_string.size());
 
-	// TODO:
-	// For each character in input_string:
-	//  - If action == 'e': replace chars found in COL 0 with COL 1
-	//  - If action == 'd': replace chars found in COL 1 with COL 0
-	//  - If not found (punctuation/whitespace), keep as-is
-	//
-	// Use simple loops:
-	//  - Outer loop over characters
-	//  - Inner loop over 52 rows to find mapping
+	for (char c : input_string)
+	{
+		bool replaced = false;
 
-	return "";
+		for (int j = 0; j < KEY_ROWS; j++)
+		{
+			if ((action == 'E' || action == 'e') && c == key[j][0])
+			{
+				output_string += key[j][1];
+				replaced = true;
+				break;
+			}
+			if ((action == 'D' || action == 'd') && c == key[j][1])
+			{
+				output_string += key[j][0];
+				replaced = true;
+				break;
+			}
+		}
+
+		if (!replaced)
+			output_string += c;
+	}
+
+	return output_string;
 }
 
 /*
@@ -316,11 +362,12 @@ static std::string shift_text(const std::string& input_string,
  */
 static void save_output(const std::string& output_file, const std::string& output_string)
 {
-	// TODO:
-	// - Open output_file for writing
-	// - Write output_string
-	// - Throw runtime_error if open fails
-
+	std::ofstream outFile(output_file);
+	if (!outFile)
+	{
+		throw std::runtime_error("Could not open output file: " + output_file);
+	}
+	outFile << output_string;
 }
 
 void non_arguments(const std::string& single_word, const std::string& text_stream) {
