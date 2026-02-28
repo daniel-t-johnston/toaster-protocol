@@ -3,6 +3,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerCommandArguments>-d -kKEYWORD input_2.txt output.txt</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArgumentsHistory>-e -kKEYWORD input.txt output.txt|-d -kKEYWORD input2.txt output.txt|-d -kKEYWORD input_2.txt output.txt|</LocalDebuggerCommandArgumentsHistory>
+    <LocalDebuggerCommandArgumentsHistory>-e -kKEYWORD input.txt output.txt|--d -kKEYWORD input_2.txt output.txt|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
 </Project>
