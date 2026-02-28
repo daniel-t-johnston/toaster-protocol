@@ -22,11 +22,11 @@
 struct misspelled_word;
 
 // Function prototypes
-static void create_dict(std::vector<std::string>& dict, const std::string& dict_file);						//Author:
-static std::string clean_word(const std::string& word);														//Author:
-static void load_source(std::vector<std::string>& source, const std::string& input_file);					//Author:
-static void output_misspelled(const std::vector<misspelled_word>& misspelled);								//Author:
-static void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,	//Author:
+static void create_dict(std::vector<std::string>& dict, const std::string& dict_file);						//Author: Daniel Johnston
+static std::string clean_word(const std::string& word);														//Author: Daniel Johnston
+static void load_source(std::vector<std::string>& source, const std::string& input_file);					//Author: Andre Gonzalez
+static void output_misspelled(const std::vector<misspelled_word>& misspelled);								//Author: Afshin Bahrampour
+static void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,	//Author: Andre Gonzalez
                             std::vector<misspelled_word>& misspelled);
 
 
@@ -41,7 +41,7 @@ static void find_misspelled(const std::vector<std::string>& source, const std::v
  *             argv[2] (if provided) is the dictionary file.
  * @return Returns 0 on successful execution, or 1 if there is an error (e.g., incorrect usage, file opening failure).
  */
-int main(int argc, char* argv[])
+int main(int argc, char* argv[])																			//Author: Afshin Bahrampour
 {
 	if (argc < 2 || argc > 3)
 	{
