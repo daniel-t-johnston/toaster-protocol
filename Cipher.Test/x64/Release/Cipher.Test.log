@@ -3,6 +3,6 @@
      Creating library C:\Users\Danny\source\repos\toaster-protocol\x64\Release\Cipher.Test.lib and object C:\Users\Danny\source\repos\toaster-protocol\x64\Release\Cipher.Test.exp
   Generating code
   Previous IPDB not found, fall back to full compilation.
-  All 18 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  All 744 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
   Cipher.Test.vcxproj -> C:\Users\Danny\source\repos\toaster-protocol\x64\Release\Cipher.Test.dll
