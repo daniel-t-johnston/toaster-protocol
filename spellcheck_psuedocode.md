@@ -10,7 +10,7 @@ START
   SET input file from argument
   SET dictionary file to optional argument OR default "words.txt"
 
-  LOAD dictionary words:
+  LOAD dictionary words: (Function)
     OPEN dictionary file
     IF open fails
       PRINT error
@@ -23,7 +23,7 @@ START
     SORT dictionary list
     REMOVE duplicates
 
-  LOAD source words:
+  LOAD source words: (Function)
     OPEN input file
     IF open fails
       PRINT error
@@ -34,12 +34,12 @@ START
         ADD to source list
     END FOR
 
-  FIND misspellings:
+  FIND misspellings: (Function)
     FOR each source word with position index
-      IF word is not found in dictionary (binary search)
+      IF word is not found in the dictionary (binary search)
         STORE misspelled word + position
     END FOR
 
-  PRINT all misspelled words and positions
+  PRINT all misspelled words and positions (Function)
 END
 ```
