@@ -1,40 +1,69 @@
 # toaster-protocol
 CSC 242 Group Project Repo
 
-## Cipher README (Draft)
+## Project Overview
+This repository currently contains two C++ console applications:
 
-- #### Cipher: Compiled to create Cipher.exe
-  - ##### Source.cpp: Contains main(), which is used to call functions from the Cipher.Core static library using Cipher.h
-- #### Cipher.Core: Cipher static library
-  - ##### Cipher.cpp: Contains functions for the Cipher program
-  - ##### Cipher.h: Header file for Cipher.Core. All exposed functions need to be included.
-- #### Cipher.Test: Testing for Cipher
-  - ##### Cipher.Test.cpp: Tests for Cipher.Core functions
+- **Cipher**: encrypts or decrypts text using a keyword-based substitution alphabet.
+- **SpellCheck**: checks a text file against a dictionary and reports misspelled words.
 
-## SpellCheck README (Draft)
+## Cipher
 
-### Overview
-The SpellCheck program reads an input text file, compares each cleaned word against a dictionary, and reports words that do not appear in the dictionary.
+### What it does
+`Cipher` builds a substitution key from a keyword and then transforms text by replacing each alphabetic character according to that key.
 
-Core behavior:
-- Accepts an input file path and an optional dictionary file path from the command line.
-- Defaults to `words.txt` when no dictionary is supplied.
-- Normalizes words to lowercase before comparing.
-- Preserves apostrophes in words (for example: `can't`).
-- Removes punctuation and non-letter characters from tokens before checking.
-- Writes detailed misspelling results to `output.txt`.
-- Prints total misspellings and per-word misspelling counts to the console.
+- Supports **encryption** (`-e`) and **decryption** (`-d`).
+- Supports keyword format `-kKEYWORD` or `-k KEYWORD`.
+- Preserves character case by maintaining lowercase and uppercase mappings.
+- Leaves non-mapped characters (punctuation, spaces, digits) unchanged.
 
-### Command Line Usage
+### Key construction behavior
+The cipher alphabet is built as follows:
+1. Start with unique letters from the keyword (in order encountered, case-insensitive).
+2. Append remaining letters of the alphabet in reverse order (`z` to `a`) that were not already used.
+
+### Command line usage
+From the directory containing `Cipher.exe`:
+
+```bash
+Cipher.exe -e -kKEYWORD <input_file> <output_file>
+Cipher.exe -d -kKEYWORD <input_file> <output_file>
+```
+
+Alternative keyword form:
+
+```bash
+Cipher.exe -e -k KEYWORD <input_file> <output_file>
+```
+
+### Error handling
+- Prints usage text when arguments are invalid.
+- Throws/prints runtime errors for missing action flag, missing keyword, missing input/output path, or file open failures.
+
+### Cipher files
+- `Cipher/Source.cpp`: main cipher implementation (argument parsing, key generation, transform, I/O).
+- `Cipher/Source1.cpp`: additional source file in the Cipher project.
+- `Cipher/input.txt`, `Cipher/input_2.txt`: sample input files.
+- `Cipher/output.txt`: sample output file.
+
+## SpellCheck
+
+### What it does
+`SpellCheck` reads an input file, cleans each token, and compares it against a cleaned dictionary.
+
+- Accepts required input file and optional dictionary file path.
+- Defaults dictionary to `words.txt` when omitted.
+- Normalizes words to lowercase.
+- Keeps apostrophes (`'`) and alphabetic characters; removes other characters.
+- Uses a sorted unique dictionary and `binary_search` for lookup.
+- Prints misspelled words and word positions to the console.
+
+### Command line usage
 From the directory containing `SpellCheck.exe`:
 
 ```bash
 SpellCheck.exe <input_file> [dictionary_file]
 ```
-
-Arguments:
-- `<input_file>`: Required. Text file to spell-check.
-- `[dictionary_file]`: Optional. Dictionary file path. Defaults to `words.txt`.
 
 Example:
 
@@ -42,38 +71,20 @@ Example:
 SpellCheck.exe input.txt words.txt
 ```
 
-### Input and Dictionary Format
-- Input file:
-  - Any plain-text file.
-  - Split by whitespace into tokens.
-  - Tokens are cleaned so only alphabetic characters and apostrophes remain.
-- Dictionary file:
-  - Plain-text list of words (whitespace-delimited).
-  - Case-insensitive matching is applied by lowercasing dictionary entries.
-  - Duplicate dictionary entries are removed internally.
+### Error handling
+- Prints usage text if argument count is invalid.
+- Throws/prints runtime errors when input or dictionary files cannot be opened.
 
-### Output
-- `output.txt` is generated/overwritten and contains one line per misspelled word occurrence:
+### SpellCheck files
+- `SpellCheck/Source.cpp`: main spell checking implementation.
+- `SpellCheck/input.txt`: sample input file.
+- `SpellCheck/words.txt`: default dictionary file.
+- `SpellCheck/test_dict.txt`: sample test dictionary.
 
-```text
-Misspelled word: <word> at position <word_number>
-```
+## Tests
+Visual Studio test projects are present:
 
-- Console output includes:
-  - Total misspelled words.
-  - A per-word misspelling frequency summary.
+- `Cipher.Test/`
+- `SpellCheck.Test/`
 
-### Error Handling
-- If the command line argument count is invalid, the program prints:
-
-```text
-Usage: SpellCheck.exe <input_file> [dictionary_file]
-```
-
-- If the dictionary or input file cannot be opened, the core functions throw `std::runtime_error`.
-
-### Related Files
-- `SpellCheck/Source.cpp`: Program entry point and argument handling.
-- `SpellCheck.Core/SpellCheck.cpp`: Dictionary loading, input cleaning, misspelling detection, and output formatting.
-- `SpellCheck.Core/SpellCheck.h`: Public API and `misspelled_word` struct.
-- `SpellCheck.Test/SpellCheck.Test.cpp`: Unit tests for SpellCheck core behavior.
+These are scaffolded in the repository and can be extended with additional unit tests.
