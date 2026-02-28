@@ -14,7 +14,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-#include <fstream>  
+#include <fstream> 
+#include <sstream>
 
 // Constants for the substitution key table.
 static const int KEY_ROWS = 52;
@@ -27,12 +28,13 @@ static void parse_args(int argc, char* argv[],														// Authors: Daniel J
 	std::string& input_file,
 	std::string& output_file);
 static void print_usage(const char* program_name);													// Authors: Daniel Johnston
-static void generate_key(const std::string& keyword, char key[KEY_ROWS][KEY_COLS]);					// Authors:
-static std::string get_input(const std::string& input_file);										// Authors:
-static std::string shift_text(const std::string& input_string,										// Authors:
+static void generate_key(const std::string& keyword, char key[KEY_ROWS][KEY_COLS]);					// Authors: 
+static std::string get_input(const std::string& input_file);										// Authors: Afshin Bahrampour
+void non_arguments(const std::string& single_word, const std::string& text_stream);					// Authors: Afshin Bahrampour
+static std::string shift_text(const std::string& input_string,										// Authors: 
 	const char key[KEY_ROWS][KEY_COLS],
 	char action);
-static void save_output(const std::string& output_file, const std::string& output_string);			// Authors:
+static void save_output(const std::string& output_file, const std::string& output_string);			// Authors: 
 
 int main(int argc, char* argv[])
 {
@@ -84,7 +86,6 @@ static void print_usage(const char* program_name)
 		<< "Also accepted:\n"
 		<< "  " << program_name << " -e -k KEYWORD <input_file> <output_file>\n";
 }
-
 
 /*
  *Parses command-line arguments to determine the action (encrypt/decrypt), keyword, input file, and output file.
@@ -214,12 +215,67 @@ static void generate_key(const std::string& keyword, char key[KEY_ROWS][KEY_COLS
  */
 static std::string get_input(const std::string& input_file)
 {
-	// TODO:
-	// - Open input_file
-	// - Read entire contents (including spaces/newlines) into a string
-	// - Throw runtime_error if open fails
+	if (input_file.size() < 4 ||
+		input_file.substr(input_file.size() - 4) != ".txt") //Added to skip if valid arg passed - DJ
+	{
+		int choice = -1;
+		std::string single_word;
+		std::string text_stream;
 
-	return "";
+		std::cout << "\nEnter 0 to quit, 1 for a single word, 2 for a text file: ";
+		std::cin >> choice;
+		if (choice == 0)
+		{
+			std::cout << "Exiting program...\n";
+			std::exit(0);
+		}
+		if (choice == 1)
+		{
+			std::cout << "Enter a single word: ";
+			std::cin >> single_word;
+			// Use stringstream to store the word
+			std::stringstream ss;
+			ss << single_word;
+			text_stream = ss.str();
+			// Call function
+			non_arguments(single_word, text_stream);
+			return single_word;
+		}
+		if (choice == 2)
+		{
+			std::string filename;
+			std::cout << "Enter filename: ";
+
+			std::cin >> filename;
+			std::ifstream file(filename);
+			if (!file)
+			{
+				std::cout << "Error: Could not open file.\n";
+			}
+			// Read entire file into text_stream
+			std::stringstream buffer;
+			buffer << file.rdbuf();
+			text_stream = buffer.str();
+			// No single word in this case
+			single_word = "";
+			// Call function
+			non_arguments(single_word, text_stream);
+			return text_stream;
+		}
+		if (choice < 0 || choice > 2) {
+			throw std::invalid_argument("Choice must be 0, 1, or 2.");
+		}
+	}
+
+	std::ifstream file(input_file);
+	if (!file)
+	{
+		throw std::runtime_error("Error: Could not open file " + input_file);
+	}
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	std::string input_string = buffer.str();
+	return input_string;
 }
 
 /*
@@ -265,4 +321,14 @@ static void save_output(const std::string& output_file, const std::string& outpu
 	// - Write output_string
 	// - Throw runtime_error if open fails
 
+}
+
+void non_arguments(const std::string& single_word, const std::string& text_stream) {
+	// This function stores or processes the data for later use.
+	// For now, we just show what was received.
+	std::cout << "\n--- non_arguments() called ---\n";
+	if (!single_word.empty()) {
+		std::cout << "Single word stored: " << single_word << "\n";
+	}
+	std::cout << "Text stream stored:\n" << text_stream << "\n";
 }
