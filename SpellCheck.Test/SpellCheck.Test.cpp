@@ -413,8 +413,8 @@ namespace SpellCheckTest
     {
     public:
 
-        // An empty misspelled list must still print the section header.
-        TEST_METHOD(EmptyMisspelled_PrintsHeaderOnly)
+        // An empty misspelled list must print the header and a "none found" message.
+        TEST_METHOD(EmptyMisspelled_PrintsHeaderAndNoneFound)
         {
             std::vector<misspelled_word> misspelled;
 
@@ -426,7 +426,7 @@ namespace SpellCheckTest
 
             std::cout.rdbuf(oldBuf);
 
-            Assert::AreEqual(std::string("Misspelled words:\n"), captured.str());
+            Assert::AreEqual(std::string("Misspelled words:\nNo misspelled words found.\n"), captured.str());
         }
 
         // One misspelled word must be printed in the expected format.

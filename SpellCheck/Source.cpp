@@ -189,6 +189,11 @@ static void output_misspelled(const std::vector<misspelled_word>& misspelled)
 {
 
 	std::cout << "Misspelled words:" << '\n';
+	if (misspelled.empty())
+	{
+		std::cout << "No misspelled words found." << '\n';
+		return;
+	}
 	for (const auto& mw : misspelled)
 	{
 		std::cout << "Word: " << mw.word << ", Position: " << mw.word_number << '\n';
