@@ -59,14 +59,14 @@ int main(int argc, char* argv[])																			//Author: Afshin Bahrampour
 		dict_file = "words.txt";
 	}
 
-	std::vector<std::string> dict;
+	std::vector<std::string> words;
 	std::vector<std::string> source;
 	std::vector<misspelled_word> misspelled;
 	try
 	{
-		create_dict(dict, dict_file);
+		create_dict(words, dict_file);
 		load_source(source, input_file);
-		find_misspelled(source, dict, misspelled);
+		find_misspelled(source, words, misspelled);
 		output_misspelled(misspelled);
 	}
 	catch (const std::exception& e)
@@ -189,6 +189,11 @@ static void output_misspelled(const std::vector<misspelled_word>& misspelled)
 {
 
 	std::cout << "Misspelled words:" << '\n';
+	if (misspelled.empty())
+	{
+		std::cout << "No misspelled words found." << '\n';
+		return;
+	}
 	for (const auto& mw : misspelled)
 	{
 		std::cout << "Word: " << mw.word << ", Position: " << mw.word_number << '\n';
