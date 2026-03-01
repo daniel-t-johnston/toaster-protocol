@@ -29,7 +29,6 @@ static void output_misspelled(const std::vector<misspelled_word>& misspelled);		
 static void find_misspelled(const std::vector<std::string>& source, const std::vector<std::string>& dict,	//Author: Andre Gonzalez
                             std::vector<misspelled_word>& misspelled);
 
-
 /**
  * Main function that orchestrates the spell checking process. 
  * It takes command-line arguments for the input file and an optional dictionary file. 
