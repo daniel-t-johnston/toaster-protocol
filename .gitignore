@@ -40,3 +40,14 @@
 # debug information files
 *.dwo
 /.vs
+
+# Visual Studio build output directories
+**/x64/
+
+# Visual Studio user-specific settings (not shared across team members)
+*.user
+*.DotSettings.user
+
+# Generated program output files
+Cipher/output.txt
+SpellCheck/output.txt
